@@ -2,7 +2,7 @@
 
 A lightweight and modern music player designed specifically for your collection of osu! songs.
 
-*(You can add a screenshot of the application here)*
+
 
 ## Features
 
