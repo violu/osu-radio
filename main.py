@@ -1,34 +1,29 @@
-# soon to be a music player 
-
-import sys
-from PyQt6.QtWidgets import QApplication, QMessageBox
-import qtawesome as qta
 import os
+import sys
+import json
+import ctypes
+from PyQt6.QtWidgets import QApplication, QMessageBox
 from PyQt6.QtGui import QIcon
+import qtawesome as qta
 
 from ui.main_window import OsuPlayerApp
 from utils.config import get_songs_directory
 from utils.scanner import scan_songs
 
-
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
-    else:
-        # Not in a bundle
+    except Exception:
         base_path = os.path.abspath(".")
-
     return os.path.join(base_path, relative_path)
-
 
 def main():
     app = QApplication(sys.argv)
     
     # --- Windows-specific taskbar icon fix ---
     if sys.platform == 'win32':
-        import ctypes
         myappid = 'mycompany.osuradio.1.0.0' # Arbitrary unique string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     
@@ -76,5 +71,6 @@ def main():
     main_win.show()
     sys.exit(app.exec())
 
+
 if __name__ == '__main__':
-    main() 
+    main()
