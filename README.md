@@ -2,7 +2,7 @@
 
 A lightweight and modern music player designed specifically for your collection of osu! songs.
 
-*(You can add a screenshot of the application here)*
+![osu!radio_kmKMwzvFj7](https://github.com/user-attachments/assets/752798a6-e8c3-484d-9106-06d17d55801f)
 
 ## Features
 
@@ -28,9 +28,8 @@ To run the player from the source code, follow these steps.
 ### Installation
 
 1.  **Clone the repository:**
-    *(Replace `YOUR_USERNAME` with your actual GitHub username)*
     ```bash
-    git clone https://github.com/YOUR_USERNAME/osu-radio.git
+    git clone https://github.com/violu/osu-radio.git
     cd osu-radio
     ```
 
@@ -66,5 +65,3 @@ You can build a standalone `.exe` file for Windows using PyInstaller.
     pyinstaller --name "osu!radio" --onefile --windowed --icon="icons/app_icon.ico" --add-data "icons;icons" main.py
     ```
 
----
-*This project was developed with the assistance of an AI pair programmer.* 
