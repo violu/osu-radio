@@ -185,22 +185,26 @@ class OsuPlayerApp(QMainWindow):
         self.song_list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         for song in self.song_library:
             self.song_list_widget.addItem(song['display_text'])
+
+        # --- Контейнер для скроллбара ---
+        self.scrollbar_container = QWidget()
+        self.scrollbar_container.setObjectName("scrollBarContainer")
+        scrollbar_layout = QVBoxLayout(self.scrollbar_container)
+        scrollbar_layout.setContentsMargins(2, 2, 2, 2)
+        
         # --- Внешний вертикальный скроллбар ---
         self.song_list_scrollbar = QScrollBar(Qt.Orientation.Vertical)
         self.song_list_scrollbar.setObjectName("externalSongScrollBar")
-        # Разделитель между списком и скроллбаром
-        self.song_list_separator = QWidget()
-        self.song_list_separator.setFixedWidth(4)
-        self.song_list_separator.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #222, stop:0.25 #222, stop:0.25 transparent, stop:1 transparent);")
-        # Контейнер для списка и скроллбара
-        self.song_list_container = QWidget()
-        self.song_list_container.setObjectName("songListContainer")
-        song_list_hlayout = QHBoxLayout(self.song_list_container)
-        song_list_hlayout.setContentsMargins(0, 0, 0, 0)
-        song_list_hlayout.setSpacing(0)
-        song_list_hlayout.addWidget(self.song_list_widget, 1)
-        song_list_hlayout.addWidget(self.song_list_separator, 0)
-        song_list_hlayout.addWidget(self.song_list_scrollbar, 0)
+        scrollbar_layout.addWidget(self.song_list_scrollbar)
+
+        # --- Контейнер для списка и скроллбара ---
+        list_and_scroll_container = QWidget()
+        list_and_scroll_layout = QHBoxLayout(list_and_scroll_container)
+        list_and_scroll_layout.setContentsMargins(0, 0, 0, 0)
+        list_and_scroll_layout.setSpacing(10) # Отступ между списком и скроллбаром
+        list_and_scroll_layout.addWidget(self.song_list_widget, 1)
+        list_and_scroll_layout.addWidget(self.scrollbar_container)
+        
         # Синхронизация скроллбаров
         sbar = self.song_list_widget.verticalScrollBar()
         if sbar is not None:
@@ -211,8 +215,9 @@ class OsuPlayerApp(QMainWindow):
             sbar.valueChanged.connect(self.song_list_scrollbar.setValue)
             self.song_list_scrollbar.valueChanged.connect(sbar.setValue)
             sbar.rangeChanged.connect(lambda minv, maxv: self.song_list_scrollbar.setRange(minv, maxv))
+        
         right_panel_layout.addWidget(self.search_bar)
-        right_panel_layout.addWidget(self.song_list_container)
+        right_panel_layout.addWidget(list_and_scroll_container)
         
         # --- Splitter, который разделяет левую и правую панели ---
         main_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -501,11 +506,8 @@ class OsuPlayerApp(QMainWindow):
                 height: 0px;
             }
             #externalSongScrollBar {
-                background-color: #18181b !important;
+                background-color: transparent !important;
                 border: none;
-                width: 12px;
-                min-width: 12px;
-                max-width: 12px;
                 margin: 0;
             }
             #externalSongScrollBar::handle {
@@ -519,8 +521,9 @@ class OsuPlayerApp(QMainWindow):
                 background: none;
                 border: none;
             }
-            #songListContainer {
-                background: none;
+            #scrollBarContainer {
+                background-color: #2c2c2c;
+                border: 1px solid #444444;
             }
             QSplitter::handle:horizontal {
                 background-color: #444;
@@ -563,10 +566,21 @@ class OsuPlayerApp(QMainWindow):
         self.is_dt_enabled = self.dt_button.isChecked()
         self.dt_button.setIcon(self.dt_icon_on if self.is_dt_enabled else self.dt_icon)
         
-        if self.stream and (self.stream.active or self.is_paused):
-            # Calculate position in ms based on the rate that *was* being used for playback
-            current_pos_ms = (self.current_frame / self.current_playback_rate) * 1000 if self.current_playback_rate > 0 else 0
-            self.play_song(self.current_song_index, start_pos_ms=current_pos_ms)
+        # Если песня сейчас играет (или на паузе), нужно плавно переключить скорость
+        if self.stream and (self.stream.active or self.is_paused) and self.samplerate > 0:
+            # 1. Сохраняем текущую музыкальную позицию в кадрах
+            frame_to_preserve = self.current_frame
+            
+            # 2. Определяем НОВУЮ скорость воспроизведения
+            new_playback_rate = self.samplerate * 1.5 if self.is_dt_enabled else self.samplerate
+            
+            # 3. Рассчитываем новую стартовую позицию в миллисекундах,
+            #    которая будет соответствовать сохраненному кадру при новой скорости.
+            new_start_pos_ms = (frame_to_preserve / new_playback_rate) * 1000
+            
+            # 4. Перезапускаем воспроизведение с этой новой, пересчитанной позиции.
+            #    Функция play_song также обновит BPM на лету.
+            self.play_song(self.current_song_index, start_pos_ms=new_start_pos_ms)
 
     def update_duration_display(self, duration_ms):
         self.total_time_label.setText(format_time(duration_ms))
