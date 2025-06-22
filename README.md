@@ -28,9 +28,8 @@ To run the player from the source code, follow these steps.
 ### Installation
 
 1.  **Clone the repository:**
-    *(Replace `YOUR_USERNAME` with your actual GitHub username)*
     ```bash
-    git clone https://github.com/YOUR_USERNAME/osu-radio.git
+    git clone https://github.com/violu/osu-radio.git
     cd osu-radio
     ```
 
@@ -66,5 +65,3 @@ You can build a standalone `.exe` file for Windows using PyInstaller.
     pyinstaller --name "osu!radio" --onefile --windowed --icon="icons/app_icon.ico" --add-data "icons;icons" main.py
     ```
 
----
-*This project was developed with the assistance of an AI pair programmer.* 
