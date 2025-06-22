@@ -1,0 +1,21 @@
+# PyInstaller
+/build/
+/dist/
+*.spec
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Cache files
+song_cache.json
+
+# Editor-specific
+.cursor/
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db 
