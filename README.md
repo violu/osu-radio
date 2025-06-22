@@ -2,7 +2,7 @@
 
 A lightweight and modern music player designed specifically for your collection of osu! songs.
 
-
+![osu!radio_kmKMwzvFj7](https://github.com/user-attachments/assets/752798a6-e8c3-484d-9106-06d17d55801f)
 
 ## Features
 
