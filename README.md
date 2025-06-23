@@ -7,8 +7,8 @@ A lightweight and modern music player designed specifically for your collection 
 ## Features
 
 - **Automatic Song Scanning:** Automatically finds and processes songs from your osu! "Songs" directory.
-- **Blazing-Fast Caching:** Subsequent launches are instant thanks to an intelligent caching system that detects changes to your songs folder.
-- **Full Playback Control:** Standard controls including play, pause, next, and previous song.
+- **Fast Caching:** Subsequent launches are instant thanks to an intelligent caching system that detects changes to your songs folder.
+- **Playback Control:** Standard controls including play, pause, next, and previous song.
 - **Playback Modes:**
     - **Shuffle:** Play your songs in a random order.
     - **Repeat:** Loop your favorite track endlessly.
