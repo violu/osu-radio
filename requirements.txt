@@ -1,2 +1,4 @@
-just-playback
-PyQt6 
+PyQt6
+sounddevice
+soundfile
+qtawesome 
